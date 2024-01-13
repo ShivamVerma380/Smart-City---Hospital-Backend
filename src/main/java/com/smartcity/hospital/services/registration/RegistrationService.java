@@ -200,4 +200,29 @@ public class RegistrationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
     }
+
+    public ResponseEntity<?> updateName(String authorization, String firstName, String lastName) {
+        try {
+            String token = authorization.substring(7);
+            String email = jwtUtil.extractUsername(token);
+            Citizen citizen = citizenDao.getCitizenByemail(email);
+            if (citizen!=null){
+                citizen.setFirstName(firstName);
+                citizen.setLastName(lastName);
+                citizenDao.save(citizen);
+                responseMessage.setMessage("Name updated successfully....");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseMessage);
+            }
+            Admin admin = adminDao.getAdminByemail(email);
+            admin.setFirstName(firstName);
+            admin.setLastName(lastName);
+            adminDao.save(admin);
+            responseMessage.setMessage("Name updated successfully....");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

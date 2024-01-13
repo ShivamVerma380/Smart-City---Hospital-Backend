@@ -91,4 +91,15 @@ public class RegistrationController {
         }
     }
 
+    @PutMapping("/user/name")
+    public ResponseEntity<?> updateContact(@RequestHeader("Authorization") String authorization, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        try {
+            return registrationService.updateName(authorization, firstName, lastName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
 }

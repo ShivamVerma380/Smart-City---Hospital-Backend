@@ -249,4 +249,25 @@ public class RegistrationService {
         }
         
     }
+
+    public ResponseEntity<?> deletePassword(String authorization) {
+        try {
+            String token = authorization.substring(7);
+            String email = jwtUtil.extractUsername(token);
+            Citizen citizen = citizenDao.getCitizenByemail(email);
+            if (citizen!=null){
+                citizenDao.delete(citizen);
+                responseMessage.setMessage("User deleted successfully....");
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+            }
+            Admin admin = adminDao.getAdminByemail(email);
+            adminDao.delete(admin);
+            responseMessage.setMessage("Admin updated successfully....");
+            return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

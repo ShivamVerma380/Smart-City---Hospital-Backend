@@ -17,6 +17,7 @@ import com.smartcity.hospital.services.registration.RegistrationService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -106,6 +107,17 @@ public class RegistrationController {
     public ResponseEntity<?> updatePassword(@RequestHeader("Authorization") String authorization, @RequestParam("password") String password) {
         try {
             return registrationService.updatePassword(authorization, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<?> updatePassword(@RequestHeader("Authorization") String authorization) {
+        try {
+            return registrationService.deletePassword(authorization);
         } catch (Exception e) {
             e.printStackTrace();
             responseMessage.setMessage(e.getMessage());

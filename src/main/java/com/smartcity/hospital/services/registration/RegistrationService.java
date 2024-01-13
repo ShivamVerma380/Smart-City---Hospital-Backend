@@ -18,6 +18,7 @@ import com.smartcity.hospital.dao.AdminDao;
 import com.smartcity.hospital.dao.CitizenDao;
 import com.smartcity.hospital.helper.JwtUtil;
 import com.smartcity.hospital.helper.ResponseMessage;
+import com.smartcity.hospital.model.Admin;
 import com.smartcity.hospital.model.Citizen;
 import com.smartcity.hospital.services.CustomUserDetailsService;
 
@@ -104,6 +105,46 @@ public class RegistrationService {
 
             responseMessage.setMessage("Bad credentials.");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(responseMessage);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+    public ResponseEntity<?> createAdmin(Admin admin) {
+        try {
+            if (admin.getPassword() == null) {
+                // Handle the case where the password is null
+                throw new IllegalArgumentException("Password cannot be null");
+            }
+            //Step 1: Admin should not exist either in citizen or admin DB.
+            String email = admin.getEmail();
+            if (citizenDao.getCitizenByemail(email)!=null || adminDao.getAdminByemail(email)!=null) {
+                responseMessage.setMessage("Email already exists.....");
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(responseMessage);
+            }
+
+            log.info("Admin:"+admin.toString());
+            
+            String password = admin.getPassword();
+            admin.setPassword(mySecurityConfig.passwordEncoder().encode(admin.getPassword()));
+
+            //Step 2: Save the citizen in db.
+            adminDao.save(admin);
+
+            //Step 3: Token generate krna for the citizen
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(admin.getEmail()); //username == email
+            
+            String token = jwtUtil.generateToken(userDetails);
+
+            //Step 4: Return the token in message.
+            responseMessage.setMessage(token);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

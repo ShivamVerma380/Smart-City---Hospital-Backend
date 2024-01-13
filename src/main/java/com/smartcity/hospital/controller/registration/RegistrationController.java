@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartcity.hospital.helper.ResponseMessage;
+import com.smartcity.hospital.model.Admin;
 import com.smartcity.hospital.model.Citizen;
 import com.smartcity.hospital.services.registration.RegistrationService;
 
@@ -47,6 +48,17 @@ public class RegistrationController {
     public ResponseEntity<?> createCitizen(@PathVariable("email") String email, @PathVariable("password") String password) {
         try {
             return registrationService.loginCitizen(email, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+    @PostMapping(value = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createCitizen(@RequestBody Admin admin) {
+        try {
+            return registrationService.createAdmin(admin);
         } catch (Exception e) {
             e.printStackTrace();
             responseMessage.setMessage(e.getMessage());

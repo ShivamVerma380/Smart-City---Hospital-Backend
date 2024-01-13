@@ -8,8 +8,6 @@ import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 @Component
 @Table(name = "Citizen")

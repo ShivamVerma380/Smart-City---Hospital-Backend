@@ -14,6 +14,10 @@ import com.smartcity.hospital.model.Citizen;
 import com.smartcity.hospital.services.registration.RegistrationService;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 public class RegistrationController {
@@ -39,4 +43,14 @@ public class RegistrationController {
         }
     }
 
+    @GetMapping(value = "/citizen/{email}/{password}")
+    public ResponseEntity<?> createCitizen(@PathVariable("email") String email, @PathVariable("password") String password) {
+        try {
+            return registrationService.loginCitizen(email, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

@@ -5,10 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.smartcity.hospital.config.MySecurityConfig;
@@ -77,6 +79,31 @@ public class RegistrationService {
             responseMessage.setMessage(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
 
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+    public ResponseEntity<?> loginCitizen(String email, String password) {
+        try {
+            Citizen citizen = citizenDao.getCitizenByemail(email);
+            if (citizen==null) {
+                responseMessage.setMessage("Email id does not exist....");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            if (bCryptPasswordEncoder.matches(password, citizen.getPassword())) {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(citizen.getEmail());
+                String token = jwtUtil.generateToken(userDetails);
+                responseMessage.setMessage(token);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+            }
+
+            responseMessage.setMessage("Bad credentials.");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(responseMessage);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

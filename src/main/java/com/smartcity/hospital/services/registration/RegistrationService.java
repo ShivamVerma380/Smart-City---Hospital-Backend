@@ -177,4 +177,27 @@ public class RegistrationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
     }
+
+    public ResponseEntity<?> updateContact(String authorization, String contact){
+        try {
+            String token = authorization.substring(7);
+            String email = jwtUtil.extractUsername(token);
+            Citizen citizen = citizenDao.getCitizenByemail(email);
+            if (citizen!=null){
+                citizen.setContactNumber(contact);
+                citizenDao.save(citizen);
+                responseMessage.setMessage("Contact updated successfully....");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseMessage);
+            }
+            Admin admin = adminDao.getAdminByemail(email);
+            admin.setContactNumber(contact);
+            adminDao.save(admin);
+            responseMessage.setMessage("Contact updated successfully....");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

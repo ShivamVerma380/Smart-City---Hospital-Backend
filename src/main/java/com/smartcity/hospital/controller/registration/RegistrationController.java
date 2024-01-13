@@ -15,9 +15,12 @@ import com.smartcity.hospital.model.Citizen;
 import com.smartcity.hospital.services.registration.RegistrationService;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -77,4 +80,15 @@ public class RegistrationController {
         }
     }
     
+    @PutMapping("/user/contact")
+    public ResponseEntity<?> updateContact(@RequestHeader("Authorization") String authorization, @RequestParam("contactNumber") String contactNumber) {
+        try {
+            return registrationService.updateContact(authorization, contactNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
 }

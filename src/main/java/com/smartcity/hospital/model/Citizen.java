@@ -1,10 +1,14 @@
 package com.smartcity.hospital.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Component
@@ -12,14 +16,24 @@ import org.springframework.stereotype.Component;
 public class Citizen {
     
     @Id
+    @NonNull
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "firstName")
+    @NonNull
     private String firstName;
 
+    @NonNull
+    @Column(name = "lastName")
     private String lastName;
 
+    @Column(name = "contactNumber")
+    @NonNull
     private String contactNumber;
 
+    @Column(name = "password")
+    @NonNull
     private String password;
 
     public Citizen() {

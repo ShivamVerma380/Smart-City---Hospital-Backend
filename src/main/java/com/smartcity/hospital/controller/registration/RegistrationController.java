@@ -102,4 +102,17 @@ public class RegistrationController {
         }
     }
 
+    @PutMapping("/user/password")
+    public ResponseEntity<?> updatePassword(@RequestHeader("Authorization") String authorization, @RequestParam("password") String password) {
+        try {
+            return registrationService.updatePassword(authorization, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+
+
 }

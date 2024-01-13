@@ -45,7 +45,7 @@ public class RegistrationController {
     }
 
     @GetMapping(value = "/citizen/{email}/{password}")
-    public ResponseEntity<?> createCitizen(@PathVariable("email") String email, @PathVariable("password") String password) {
+    public ResponseEntity<?> loginCitizen(@PathVariable("email") String email, @PathVariable("password") String password) {
         try {
             return registrationService.loginCitizen(email, password);
         } catch (Exception e) {
@@ -65,4 +65,16 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
     }
+
+    @GetMapping(value = "/admin/{email}/{password}")
+    public ResponseEntity<?> loginAdmin(@PathVariable("email") String email, @PathVariable("password") String password) {
+        try {
+            return registrationService.loginAdmin(email, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+    
 }

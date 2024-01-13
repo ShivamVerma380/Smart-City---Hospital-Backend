@@ -152,4 +152,29 @@ public class RegistrationService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
     }
+
+    public ResponseEntity<?> loginAdmin(String email, String password) {
+        try {
+            Admin admin = adminDao.getAdminByemail(email);
+            if (admin==null) {
+                responseMessage.setMessage("Email id does not exist....");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            if (bCryptPasswordEncoder.matches(password, admin.getPassword())) {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(admin.getEmail());
+                String token = jwtUtil.generateToken(userDetails);
+                responseMessage.setMessage(token);
+                return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+            }
+
+            responseMessage.setMessage("Bad credentials.");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(responseMessage);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.smartcity.hospital.controllers;
+package com.smartcity.hospital.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

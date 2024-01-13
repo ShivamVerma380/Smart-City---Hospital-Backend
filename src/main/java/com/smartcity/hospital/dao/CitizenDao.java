@@ -1,14 +1,14 @@
-package com.smartcity.hospital.daos;
+package com.smartcity.hospital.dao;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.smartcity.hospital.models.Citizen;
+import com.smartcity.hospital.model.Citizen;
 
 @Repository
 @Component
 public interface CitizenDao extends CrudRepository<Citizen, String> {
     
-    public Citizen getCitizenByEmail(String email);
+    public Citizen getCitizenByemail(String email);
 }

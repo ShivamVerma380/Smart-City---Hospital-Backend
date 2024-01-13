@@ -1,4 +1,4 @@
-package com.smartcity.hospital.models;
+package com.smartcity.hospital.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

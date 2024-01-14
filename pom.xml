@@ -35,6 +35,7 @@
 		</dependency>
 
 		<!-- Swagger dependency-->
+		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>

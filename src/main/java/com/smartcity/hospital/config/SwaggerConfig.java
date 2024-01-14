@@ -27,7 +27,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo("Smart Hospital", "This page contains API Swagger Documentation for Gardener project.","1.0","","Shivam Verma","Apache 2.0","https://github.com/ShivamVerma380/Smart-City---Hospital-Backend");
+        ApiInfo apiInfo = new ApiInfo("Hospital - Smart City", "This page contains API Swagger Documentation for Smart city project.","1.0","","Shivam Verma","Apache 2.0","");
         return apiInfo;
     }
     

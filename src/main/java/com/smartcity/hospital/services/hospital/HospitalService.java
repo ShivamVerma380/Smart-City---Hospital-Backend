@@ -111,4 +111,47 @@ public class HospitalService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
         }
     }
+
+    public ResponseEntity<?> getHospital(int id) {
+        try {
+            Hospital hospital = hospitalDao.getHospitalById(id);
+            if (hospital==null) {
+                responseMessage.setMessage("Hospital not found....");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+            int blobLength = (int) hospital.getImg().length();
+            byte[] blobAsBytes = hospital.getImg().getBytes(1, blobLength);
+            HospitalResponse hospitalResponse = new HospitalResponse(hospital.getId(), hospital.getName(), hospital.getAddress(), hospital.getContactNumber(), hospital.getServicesOffered(), hospital.getType(), blobAsBytes, hospital.getHours());
+            return ResponseEntity.status(HttpStatus.OK).body(hospitalResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+
+    public ResponseEntity<?> deleteHospital(String authorization, int id) {
+        try {
+            String token = authorization.substring(7);
+
+            String email = jwtUtil.extractUsername(token); 
+            
+            if(citizenDao.getCitizenByemail(email)!=null) {
+                responseMessage.setMessage("You aren't authorised to add hospitals......");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMessage);
+            }
+            Hospital hospital = hospitalDao.getHospitalById(id);
+            if (hospital==null) {
+                responseMessage.setMessage("Hospital does not exist........");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+            hospitalDao.delete(hospital);
+            responseMessage.setMessage("Hospital deleted successfully......");
+            return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
 }

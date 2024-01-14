@@ -11,12 +11,15 @@ import com.smartcity.hospital.helper.ResponseMessage;
 import com.smartcity.hospital.services.email.EmailService;
 
 import io.swagger.models.Response;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@CrossOrigin(origins="*")
 public class EmailController {
     
     Log log = LogFactory.getLog(EmailController.class);

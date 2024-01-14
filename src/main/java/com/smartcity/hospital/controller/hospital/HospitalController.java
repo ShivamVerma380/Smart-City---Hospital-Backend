@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -42,6 +44,17 @@ public class HospitalController {
     public ResponseEntity<?> addHospital(@RequestHeader("Authorization") String authorization,@RequestParam("id") int id, @RequestParam("image") MultipartFile image) {
         try {
             return hospitalService.addHospitalImage(authorization, id, image);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMessage.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
+    }
+    
+    @GetMapping("/hospital")
+    public ResponseEntity<?> getHospitals() {
+        try {
+            return hospitalService.getHospitals();
         } catch (Exception e) {
             e.printStackTrace();
             responseMessage.setMessage(e.getMessage());
